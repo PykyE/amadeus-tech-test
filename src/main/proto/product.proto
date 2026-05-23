@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.amadeus";
+option java_outer_classname = "ProductGrpcProto";
+
+package hello;
+
+service ProductService {
+    rpc CreateProduct(CreateProductRequest) returns (ProductResponse);
+    rpc GetProduct(ProductId) returns (ProductResponse);
+    rpc UpdateProduct(UpdateProductRequest) returns (ProductResponse);
+    rpc DeleteProduct(ProductId) returns (EmptyResponse);
+}
+
+message ProductId {
+    string id = 1;
+}
+
+message CreateProductRequest {
+    string name = 1;
+    optional double price = 3;
+    optional string description = 4;
+    optional int64 quantity = 5;
+    optional string tags = 7;
+}
+
+message UpdateProductRequest {
+    string id = 1;
+    optional string name = 2;
+    optional double price = 3;
+    optional string description = 4;
+    optional int64 quantity = 5;
+    optional string tags = 7;
+    optional bool active = 8;
+}
+
+message ProductResponse {
+    string id = 1;
+    string name = 2;
+    double price = 3;
+    string description = 4;
+    int64 quantity = 5;
+    string creationDate = 6;
+    string tags = 7;
+    bool active = 8;
+}
+
+message EmptyResponse {}
