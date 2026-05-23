@@ -1,72 +1,144 @@
 # rest-service
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This technical test repository contains a small Quarkus-based microservice showcasing a hybrid
+gRPC + REST architecture for a simple Product domain catalogue.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+---
 
-## Running the application in dev mode
+## Architecture overview
 
-You can run your application in dev mode that enables live coding using:
+- Runtime: Quarkus (Jakarta / Mutiny / Hibernate ORM + Panache)
+- API surfaces:
+  - gRPC service (primary business logic) — implemented under `org.amadeus.grpc.service`.
+  - REST facade — thin HTTP layer that forwards requests to the gRPC client and
+	adapts responses for HTTP clients. Implemented under `org.amadeus.rest.resource`.
+- Persistence: H2 (JDBC) + Hibernate ORM Panache (`org.amadeus.grpc.entity`, repository under `org.amadeus.grpc.repository`).
+- Validation: Jakarta Bean Validation (hibernate-validator) for REST DTOs.
+- Error mapping: gRPC errors (`StatusRuntimeException`) are translated to HTTP
+  responses by a JAX-RS `ExceptionMapper` that returns a consistent
+  `APIResponseDTO` envelope.
 
-```shell script
-./mvnw quarkus:dev
+Diagram (logical):
+
+REST Client -> REST Resource -> gRPC Client -> gRPC Service -> Repository -> H2 DB
+
+---
+
+## Build and run
+
+Prerequisites: Java 21 (or configured JDK), Maven.
+
+From project root (Windows PowerShell examples):
+
+- Build and run tests:
+
+```powershell
+mvn clean test
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+- Run the application in dev mode (live reload):
 
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
+```powershell
+mvn quarkus:dev
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+- Package the application:
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+```powershell
+mvn package
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+- Run the packaged application:
 
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
+```powershell
+java -jar target/quarkus-app/quarkus-run.jar
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+Notes:
+- The project includes a Maven wrapper (`mvnw`), you can use `./mvnw`/`mvnw.cmd` instead of system `mvn`.
+- When running tests in CI or locally make sure the test resources are present. Integration tests expect the application root path `/amadeus/api/v1` configured in `src/main/resources/application.yaml`.
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+---
+
+## REST endpoints
+
+The service exposes a REST API under the base path `/amadeus/api/v1/products`.
+
+For concrete request examples, refer to the Postman collection file in the
+repository root: `requests.postman_collection.json`.
+
+Responses use a consistent envelope `APIResponseDTO` containing `grpcCode`, `message` and `data`.
+
+---
+
+## gRPC contract summary
+
+The gRPC contract is defined in `src/main/proto/product.proto` and generates the
+`org.amadeus.*` classes used by the service and client layers.
+
+### RPCs
+
+- `CreateProduct(CreateProductRequest) -> ProductResponse`
+- `GetProduct(ProductId) -> ProductResponse`
+- `GetAllProducts(EmptyRequest) -> ProductListResponse`
+- `UpdateProduct(UpdateProductRequest) -> ProductResponse`
+- `DeleteProduct(ProductId) -> EmptyResponse`
+
+### Messages
+
+- `ProductId`: product identifier wrapper.
+- `EmptyRequest` / `EmptyResponse`: empty wrappers for operations without payload.
+- `CreateProductRequest`: input for product creation.
+- `UpdateProductRequest`: input for full product updates.
+- `ProductResponse`: product representation returned by the service.
+- `ProductListResponse`: wrapper containing `repeated ProductResponse products`.
+
+### Consumer notes
+
+- `creationDate` is exposed as a string and mapped from the server-side `LocalDateTime`.
+
+---
+
+## Testing
+
+- Unit tests (Mockito) are under `src/test/java` for service-layer logic.
+- Integration tests use `@QuarkusTest` and RestAssured (`ProductResourceTest`).
+
+Run all tests with:
+
+```powershell
+mvn test
 ```
 
-You can then execute your native executable with: `./target/rest-service-1.0.0-SNAPSHOT-runner`
+If integration tests expect a stable product id, add a test seed file at `src/test/resources/import.sql` with an insert for a known id. Example:
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+```sql
+INSERT INTO "PRODUCTS" (id, active, created_at, description, name, price, quantity, tags)
+VALUES ('11111111-1111-1111-1111-111111111111', TRUE, CURRENT_TIMESTAMP(), 'Sample product', 'Demo Product', 19.99, 5, 'demo');
+```
 
-## Related Guides
+otherwise tests will rely on the existing `src/main/resources/import.sql` data.
 
-- REST ([guide](https://quarkus.io/guides/rest)): Build RESTful web services and APIs using Jakarta REST (formerly JAX-RS)
+---
 
-## Provided Code
+## Design decisions and trade-offs
 
-### gRPC
+- gRPC-first business core
+  - All the business logic is implemented in a gRPC service, which is in charge of handling transactional behaviours and execute all the CRUD operationss.
+  - Trade-off: requires generated stubs and an extra call hop for REST clients.
 
-Create your first gRPC service
+- REST facade
+  - Keeps HTTP mapping, validation and error translation separate from core logic.
+  - Trade-off: additional mapping code and potential duplication of DTO definitions.
 
-[Related guide section...](https://quarkus.io/guides/grpc-getting-started)
+- Error handling
+  - gRPC errors (`StatusRuntimeException`) are mapped to HTTP codes using a
+	JAX-RS `ExceptionMapper` that returns `APIResponseDTO` for consistency.
 
-### REST
+- Transactions and reactive types
+  - Methods annotated `@Transactional` return Mutiny `Uni`. Response objects
+	are constructed eagerly inside the transaction to avoid detached/lazy loading issues.
 
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+- Validation
+  - REST DTOs are validated with Jakarta Bean Validation; invalid requests are
+	translated to `INVALID_ARGUMENT` gRPC code mapped to HTTP 400.

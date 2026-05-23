@@ -1,0 +1,638 @@
+{
+  "info": {
+    "_postman_id": "10ee0213-8898-4d1d-b3e5-98e5e2e8f4bd",
+    "name": "Amadeus tech test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "14314486"
+  },
+  "item": [
+    {
+      "name": "swagger",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}{{PORT}}/swagger",
+          "host": [
+            "{{URL}}{{PORT}}"
+          ],
+          "path": [
+            "swagger"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}{{PORT}}/swagger",
+              "host": [
+                "{{URL}}{{PORT}}"
+              ],
+              "path": [
+                "swagger"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/yaml;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "4663"
+            }
+          ],
+          "cookie": [],
+          "body": "---\nopenapi: 3.1.0\ncomponents:\n  schemas:\n    APIResponseDTOListProductDTO:\n      type: object\n      properties:\n        grpcCode:\n          type: string\n        message:\n          type: string\n        data:\n          type: array\n          items:\n            $ref: \"#/components/schemas/ProductDTO\"\n    APIResponseDTOProductDTO:\n      type: object\n      properties:\n        grpcCode:\n          type: string\n        message:\n          type: string\n        data:\n          $ref: \"#/components/schemas/ProductDTO\"\n    APIResponseDTOVoid:\n      type: object\n      properties:\n        grpcCode:\n          type: string\n        message:\n          type: string\n        data: {}\n    CreateProductDTO:\n      type: object\n      required:\n        - name\n        - price\n        - description\n        - quantity\n        - tags\n      properties:\n        name:\n          type: string\n          pattern: \\S\n        price:\n          type: number\n          format: double\n          exclusiveMinimum: 0\n        description:\n          type: string\n          pattern: \\S\n        quantity:\n          type: integer\n          format: int32\n          minimum: 0\n        tags:\n          type: string\n          pattern: \\S\n    LocalDateTime:\n      type: string\n      format: date-time\n      examples:\n        - 2022-03-10T12:15:50\n    ProductDTO:\n      type: object\n      properties:\n        id:\n          type: string\n        name:\n          type: string\n        price:\n          type: number\n          format: double\n        description:\n          type: string\n        quantity:\n          type: integer\n          format: int32\n        creationDate:\n          $ref: \"#/components/schemas/LocalDateTime\"\n        tags:\n          type: string\n        active:\n          type: boolean\n    UpdateProductDTO:\n      type: object\n      required:\n        - name\n        - price\n        - description\n        - quantity\n        - tags\n        - active\n      properties:\n        name:\n          type: string\n          pattern: \\S\n        price:\n          type: number\n          format: double\n          exclusiveMinimum: 0\n        description:\n          type: string\n          pattern: \\S\n        quantity:\n          type: integer\n          format: int32\n          minimum: 0\n        tags:\n          type: string\n          pattern: \\S\n        active:\n          type: boolean\npaths:\n  /amadeus/api/v1/products:\n    get:\n      responses:\n        \"200\":\n          description: OK\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/APIResponseDTOListProductDTO\"\n      summary: Get All Products\n      tags:\n        - Product Resource\n    post:\n      requestBody:\n        content:\n          application/json:\n            schema:\n              $ref: \"#/components/schemas/CreateProductDTO\"\n        required: true\n      responses:\n        \"200\":\n          description: OK\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/APIResponseDTOProductDTO\"\n        \"400\":\n          description: Bad Request\n      summary: Create Product\n      tags:\n        - Product Resource\n  /amadeus/api/v1/products/{id}:\n    put:\n      parameters:\n        - name: id\n          in: path\n          required: true\n          schema:\n            type: string\n            pattern: \\S\n      requestBody:\n        content:\n          application/json:\n            schema:\n              $ref: \"#/components/schemas/UpdateProductDTO\"\n        required: true\n      responses:\n        \"200\":\n          description: OK\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/APIResponseDTOProductDTO\"\n        \"400\":\n          description: Bad Request\n      summary: Update Product\n      tags:\n        - Product Resource\n    get:\n      parameters:\n        - name: id\n          in: path\n          required: true\n          schema:\n            type: string\n            pattern: \\S\n      responses:\n        \"200\":\n          description: OK\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/APIResponseDTOProductDTO\"\n      summary: Get Product By Id\n      tags:\n        - Product Resource\n    delete:\n      parameters:\n        - name: id\n          in: path\n          required: true\n          schema:\n            type: string\n            pattern: \\S\n      responses:\n        \"200\":\n          description: OK\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/APIResponseDTOVoid\"\n      summary: Delete Product\n      tags:\n        - Product Resource\ninfo:\n  title: rest-service API\n  version: 1.0.0-SNAPSHOT\n"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products",
+          "host": [
+            "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "222"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"OK\",\n    \"data\": [\n        {\n            \"id\": \"11111111-1111-1111-1111-111111111111\",\n            \"name\": \"Product #1\",\n            \"price\": 19.99,\n            \"description\": \"Sample product\",\n            \"quantity\": 5,\n            \"creationDate\": \"2026-05-23T11:01:43.847685\",\n            \"tags\": \"demo\",\n            \"active\": true\n        }\n    ]\n}"
+        },
+        {
+          "name": "200 - No products",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "27"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"OK\",\n    \"data\": []\n}"
+        }
+      ]
+    },
+    {
+      "name": "product by id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/11111111-1111-1111-1111-111111111112",
+          "host": [
+            "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+          ],
+          "path": [
+            "products",
+            "11111111-1111-1111-1111-111111111112"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/11111111-1111-1111-1111-111111111111",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products",
+                "11111111-1111-1111-1111-111111111111"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "220"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"OK\",\n    \"data\": {\n        \"id\": \"11111111-1111-1111-1111-111111111111\",\n        \"name\": \"Product #1\",\n        \"price\": 19.99,\n        \"description\": \"Sample product\",\n        \"quantity\": 5,\n        \"creationDate\": \"2026-05-23T11:01:43.847685\",\n        \"tags\": \"demo\",\n        \"active\": true\n    }\n}"
+        },
+        {
+          "name": "404",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/11111111-1111-1111-1111-111111111112",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products",
+                "11111111-1111-1111-1111-111111111112"
+              ]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "100"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"NOT_FOUND\",\n    \"message\": \"Product not found with id: 11111111-1111-1111-1111-111111111112\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"price\": \"9.99\",\r\n    \"description\": \"Product test description\",\r\n    \"quantity\": \"100\",\r\n    \"tags\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products",
+          "host": [
+            "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Product test name\",\r\n    \"price\": \"9.99\",\r\n    \"description\": \"Product test description\",\r\n    \"quantity\": \"100\",\r\n    \"tags\": \"test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "239"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"OK\",\n    \"data\": {\n        \"id\": \"9cf50ee3-5229-49dc-88e3-7bf2fb9c0021\",\n        \"name\": \"Product test name\",\n        \"price\": 9.99,\n        \"description\": \"Product test description\",\n        \"quantity\": 100,\n        \"creationDate\": \"2026-05-23T11:02:17.4969348\",\n        \"tags\": \"test\",\n        \"active\": true\n    }\n}"
+        },
+        {
+          "name": "400",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"price\": \"9.99\",\r\n    \"description\": \"Product test description\",\r\n    \"quantity\": \"100\",\r\n    \"tags\": \"test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "68"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"INVALID_ARGUMENT\",\n    \"message\": \"product name is required\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Product test update\",\r\n    \"price\": \"10\",\r\n    \"description\": \"Product test update description\",\r\n    \"quantity\": \"10\",\r\n    \"tags\": \"test\",\r\n    \"active\": false\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/11111111-1111-1111-1111-111111111112",
+          "host": [
+            "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+          ],
+          "path": [
+            "products",
+            "11111111-1111-1111-1111-111111111112"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Product test update\",\r\n    \"price\": \"10\",\r\n    \"description\": \"Product test update description\",\r\n    \"quantity\": \"10\",\r\n    \"tags\": \"test\",\r\n    \"active\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/11111111-1111-1111-1111-111111111111",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products",
+                "11111111-1111-1111-1111-111111111111"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "247"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"OK\",\n    \"data\": {\n        \"id\": \"11111111-1111-1111-1111-111111111111\",\n        \"name\": \"Product test update\",\n        \"price\": 10,\n        \"description\": \"Product test update description\",\n        \"quantity\": 10,\n        \"creationDate\": \"2026-05-23T11:01:43.847685\",\n        \"tags\": \"test\",\n        \"active\": false\n    }\n}"
+        },
+        {
+          "name": "404",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Product test update\",\r\n    \"price\": \"10\",\r\n    \"description\": \"Product test update description\",\r\n    \"quantity\": \"10\",\r\n    \"tags\": \"test\",\r\n    \"active\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/11111111-1111-1111-1111-111111111112",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products",
+                "11111111-1111-1111-1111-111111111112"
+              ]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "100"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"NOT_FOUND\",\n    \"message\": \"Product not found with id: 11111111-1111-1111-1111-111111111112\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/9cf50ee3-5229-49dc-88e3-7bf2fb9c0021",
+          "host": [
+            "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+          ],
+          "path": [
+            "products",
+            "9cf50ee3-5229-49dc-88e3-7bf2fb9c0021"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/11111111-1111-1111-1111-111111111111",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products",
+                "11111111-1111-1111-1111-111111111111"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "17"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"OK\"\n}"
+        },
+        {
+          "name": "404",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}{{PORT}}{{CONTEXT_PATH}}/products/11111111-1111-1111-1111-111111111112",
+              "host": [
+                "{{URL}}{{PORT}}{{CONTEXT_PATH}}"
+              ],
+              "path": [
+                "products",
+                "11111111-1111-1111-1111-111111111112"
+              ]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "100"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"grpcCode\": \"NOT_FOUND\",\n    \"message\": \"Product not found with id: 11111111-1111-1111-1111-111111111112\"\n}"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "URL",
+      "value": ""
+    },
+    {
+      "key": "PORT",
+      "value": ""
+    },
+    {
+      "key": "CONTEXT_PATH",
+      "value": ""
+    }
+  ]
+}
