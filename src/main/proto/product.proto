@@ -9,9 +9,12 @@ package hello;
 service ProductService {
     rpc CreateProduct(CreateProductRequest) returns (ProductResponse);
     rpc GetProduct(ProductId) returns (ProductResponse);
+    rpc GetAllProducts(EmptyRequest) returns (ProductListResponse);
     rpc UpdateProduct(UpdateProductRequest) returns (ProductResponse);
     rpc DeleteProduct(ProductId) returns (EmptyResponse);
 }
+
+message EmptyRequest {}
 
 message ProductId {
     string id = 1;
@@ -44,6 +47,10 @@ message ProductResponse {
     string creationDate = 6;
     string tags = 7;
     bool active = 8;
+}
+
+message ProductListResponse {
+    repeated ProductResponse products = 1;
 }
 
 message EmptyResponse {}

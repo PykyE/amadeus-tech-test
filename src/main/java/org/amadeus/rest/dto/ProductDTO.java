@@ -8,13 +8,17 @@ public record ProductDTO(String id, String name, Double price, String descriptio
                          LocalDateTime creationDate, String tags, boolean active) {
 
     public static ProductDTO fromProductResponse(ProductResponse response) {
+        LocalDateTime creationDate = response.getCreationDate().isBlank()
+                ? null
+                : LocalDateTime.parse(response.getCreationDate());
+
         return new ProductDTO(
             response.getId(),
             response.getName(),
             response.getPrice(),
             response.getDescription(),
             (int) response.getQuantity(),
-            LocalDateTime.parse(response.getCreationDate()),
+            creationDate,
             response.getTags(),
             response.getActive()
         );

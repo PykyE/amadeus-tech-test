@@ -24,7 +24,7 @@ public class GrpcExceptionMapper implements ExceptionMapper<StatusRuntimeExcepti
             default -> 500;
         };
         
-        APIResponseDTO<?> response = APIResponseDTO.error(status, exception.getMessage());
+        APIResponseDTO<?> response = APIResponseDTO.error(status, status.getDescription());
         return Response.status(httpStatus).entity(response).build();
     }
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "PRODUCTS")
 public class ProductEntity extends PanacheEntityBase {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     public String id;
     public String name;
     public Double price;
