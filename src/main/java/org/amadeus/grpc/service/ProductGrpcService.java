@@ -51,10 +51,10 @@ public class ProductGrpcService implements ProductService {
     public Uni<ProductResponse> createProduct(CreateProductRequest request) {
         ProductEntity entity = new ProductEntity();
         entity.name = request.getName();
-        entity.price = request.hasPrice() ? request.getPrice() : 0D;
-        entity.description = request.hasDescription() ? request.getDescription() : "";
-        entity.quantity = request.hasQuantity() ? (int) request.getQuantity() : 0;
-        entity.tags = request.hasTags() ? request.getTags() : "";
+        entity.price = request.getPrice();
+        entity.description = request.getDescription();
+        entity.quantity = Math.toIntExact(request.getQuantity());
+        entity.tags = request.getTags();
         entity.creationDate = LocalDateTime.now();
         entity.active = true;
         repository.persist(entity);
@@ -73,27 +73,15 @@ public class ProductGrpcService implements ProductService {
                             .asRuntimeException()
             );
         }
+        entity.name = request.getName();
+        entity.price = request.getPrice();
+        entity.description = request.getDescription();
+        entity.quantity = (int) request.getQuantity();
+        entity.tags = request.getTags();
+        entity.active = request.getActive();
 
-        if (request.hasName()) {
-            entity.name = request.getName();
-        }
-        if (request.hasPrice()) {
-            entity.price = request.getPrice();
-        }
-        if (request.hasDescription()) {
-            entity.description = request.getDescription();
-        }
-        if (request.hasQuantity()) {
-            entity.quantity = (int) request.getQuantity();
-        }
-        if (request.hasTags()) {
-            entity.tags = request.getTags();
-        }
-        if (request.hasActive()) {
-            entity.active = request.getActive();
-        }
-
-        return Uni.createFrom().item(() -> toResponse(entity));
+        ProductResponse response = toResponse(entity);
+        return Uni.createFrom().item(response);
     }
 
     @Override
