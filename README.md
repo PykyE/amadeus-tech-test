@@ -1,4 +1,4 @@
-# rest-service
+# Amadeus tech test
 
 This technical test repository contains a small Quarkus-based microservice showcasing a hybrid
 gRPC + REST architecture for a simple Product domain catalogue.
