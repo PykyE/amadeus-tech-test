@@ -12,9 +12,8 @@ public record APIResponseDTO<T>(String grpcCode, String message, T data) {
 
     public static <T> APIResponseDTO<T> error(Status status, String message) {
         Status safeStatus = status == null ? Status.UNKNOWN : status;
-        String resolvedMessage = (message == null || message.isBlank())
-                ? safeStatus.getDescription()
-                : message;
+        String resolvedMessage =
+                (message == null || message.isBlank()) ? safeStatus.getDescription() : message;
 
         if (resolvedMessage == null || resolvedMessage.isBlank()) {
             resolvedMessage = "Unexpected error";

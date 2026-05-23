@@ -1,14 +1,14 @@
 package org.amadeus.rest.resource;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
 @TestHTTPEndpoint(ProductResource.class)
@@ -18,8 +18,7 @@ class ProductResourceTest {
     @Test
     @DisplayName("GET /products - should return list of all products")
     void testGetAllProducts() {
-        given()
-                .when()
+        given().when()
                 .get()
                 .then()
                 .statusCode(200)
@@ -32,8 +31,7 @@ class ProductResourceTest {
     @Test
     @DisplayName("GET /products/{id} - should return product when found")
     void testGetProductById_Success() {
-        given()
-                .when()
+        given().when()
                 .get("/11111111-1111-1111-1111-111111111111")
                 .then()
                 .statusCode(200)
@@ -47,8 +45,7 @@ class ProductResourceTest {
     @Test
     @DisplayName("GET /products/{id} - should return 404 when product not found")
     void testGetProductById_NotFound() {
-        given()
-                .when()
+        given().when()
                 .get("/123")
                 .then()
                 .statusCode(404)
@@ -61,7 +58,8 @@ class ProductResourceTest {
     @Test
     @DisplayName("POST /products - should create product with valid data")
     void testCreateProduct_Success() {
-        String requestBody = """
+        String requestBody =
+                """
                 {
                     "name": "New Test Product",
                     "price": 29.99,
@@ -71,8 +69,7 @@ class ProductResourceTest {
                 }
                 """;
 
-        given()
-                .contentType(ContentType.JSON)
+        given().contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
                 .post()
@@ -89,7 +86,8 @@ class ProductResourceTest {
     @Test
     @DisplayName("POST /products - should return 400 when name is missing")
     void testCreateProduct_MissingName() {
-        String requestBody = """
+        String requestBody =
+                """
                 {
                     "price": 29.99,
                     "description": "Missing name",
@@ -98,8 +96,7 @@ class ProductResourceTest {
                 }
                 """;
 
-        given()
-                .contentType(ContentType.JSON)
+        given().contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
                 .post()
@@ -112,7 +109,8 @@ class ProductResourceTest {
     @Test
     @DisplayName("POST /products - should return 400 when price is negative")
     void testCreateProduct_NegativePrice() {
-        String requestBody = """
+        String requestBody =
+                """
                 {
                     "name": "Test Product",
                     "price": -5.00,
@@ -122,8 +120,7 @@ class ProductResourceTest {
                 }
                 """;
 
-        given()
-                .contentType(ContentType.JSON)
+        given().contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
                 .post()
@@ -136,7 +133,8 @@ class ProductResourceTest {
     @Test
     @DisplayName("PUT /products/{id} - should update product with valid data")
     void testUpdateProduct_Success() {
-        String requestBody = """
+        String requestBody =
+                """
                 {
                     "name": "Updated Product Name",
                     "price": 39.99,
@@ -147,8 +145,7 @@ class ProductResourceTest {
                 }
                 """;
 
-        given()
-                .contentType(ContentType.JSON)
+        given().contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
                 .put("/11111111-1111-1111-1111-111111111111")
@@ -164,7 +161,8 @@ class ProductResourceTest {
     @Test
     @DisplayName("PUT /products/{id} - should return 404 when product not found")
     void testUpdateProduct_NotFound() {
-        String requestBody = """
+        String requestBody =
+                """
                 {
                     "name": "Updated Product Name",
                     "price": 39.99,
@@ -175,8 +173,7 @@ class ProductResourceTest {
                 }
                 """;
 
-        given()
-                .contentType(ContentType.JSON)
+        given().contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
                 .put("/123")
@@ -189,7 +186,8 @@ class ProductResourceTest {
     @Test
     @DisplayName("PUT /products/{id} - should return 400 when data is invalid")
     void testUpdateProduct_InvalidData() {
-        String requestBody = """
+        String requestBody =
+                """
                 {
                     "name": "Product test update",
                     "price": "-10",
@@ -200,8 +198,7 @@ class ProductResourceTest {
                 }
                 """;
 
-        given()
-                .contentType(ContentType.JSON)
+        given().contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
                 .put("/1")
@@ -215,15 +212,13 @@ class ProductResourceTest {
     @TestTransaction
     @DisplayName("DELETE /products/{id} - should delete product successfully")
     void testDeleteProduct_Success() {
-        given()
-                .when()
+        given().when()
                 .delete("/11111111-1111-1111-1111-111111111111")
                 .then()
                 .statusCode(200)
                 .body("grpcCode", equalTo("OK"));
 
-        given()
-                .when()
+        given().when()
                 .get("/11111111-1111-1111-1111-111111111111")
                 .then()
                 .statusCode(404)
@@ -233,14 +228,11 @@ class ProductResourceTest {
     @Test
     @DisplayName("DELETE /products/{id} - should return 404 when product not found")
     void testDeleteProduct_NotFound() {
-        given()
-                .when()
+        given().when()
                 .delete("/123")
                 .then()
                 .statusCode(404)
                 .contentType(ContentType.JSON)
                 .body("grpcCode", equalTo("NOT_FOUND"));
     }
-
 }
-

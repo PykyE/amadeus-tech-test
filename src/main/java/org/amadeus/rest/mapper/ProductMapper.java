@@ -14,10 +14,24 @@ public class ProductMapper {
     }
 
     public static CreateProductRequest toCreateRequest(CreateProductDTO dto) {
-        return CreateProductRequest.newBuilder().setName(dto.name()).setPrice(dto.price()).setDescription(dto.description()).setQuantity(dto.quantity()).setTags(dto.tags()).build();
+        return CreateProductRequest.newBuilder()
+                .setName(dto.name())
+                .setPrice(dto.price())
+                .setDescription(dto.description())
+                .setQuantity(dto.quantity())
+                .setTags(dto.tags())
+                .build();
     }
 
     public static UpdateProductRequest toUpdateRequest(String id, UpdateProductDTO dto) {
-        return UpdateProductRequest.newBuilder().setId(id).setName(dto.name()).setPrice(dto.price()).setDescription(dto.description()).setQuantity(dto.quantity()).setTags(dto.tags()).setActive(dto.active()).build();
+        return UpdateProductRequest.newBuilder()
+                .setId(id)
+                .setName(dto.name())
+                .setPrice(dto.price())
+                .setDescription(dto.description())
+                .setQuantity(dto.quantity())
+                .setTags(dto.tags())
+                .setActive(dto.active())
+                .build();
     }
 }

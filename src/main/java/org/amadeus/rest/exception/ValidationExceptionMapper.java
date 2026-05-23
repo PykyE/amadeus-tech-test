@@ -13,16 +13,15 @@ public class ValidationExceptionMapper implements ExceptionMapper<ConstraintViol
 
     @Override
     public Response toResponse(ConstraintViolationException exception) {
-        String message = exception.getConstraintViolations().stream()
-                .map(ConstraintViolation::getMessage)
-                .sorted()
-                .findFirst()
-                .orElse("Validation failed");
+        String message =
+                exception.getConstraintViolations().stream()
+                        .map(ConstraintViolation::getMessage)
+                        .sorted()
+                        .findFirst()
+                        .orElse("Validation failed");
 
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(APIResponseDTO.error(Status.INVALID_ARGUMENT, message))
                 .build();
     }
-
 }
-

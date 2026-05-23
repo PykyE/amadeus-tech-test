@@ -5,5 +5,4 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.amadeus.grpc.entity.ProductEntity;
 
 @ApplicationScoped
-public class ProductRepository implements PanacheRepositoryBase<ProductEntity, String> {
-}
+public class ProductRepository implements PanacheRepositoryBase<ProductEntity, String> {}

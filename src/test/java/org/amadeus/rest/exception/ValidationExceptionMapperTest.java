@@ -1,16 +1,15 @@
 package org.amadeus.rest.exception;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Response;
+import java.util.HashSet;
+import java.util.Set;
 import org.amadeus.rest.dto.APIResponseDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("ValidationExceptionMapper Tests")
 class ValidationExceptionMapperTest {
@@ -54,7 +53,8 @@ class ValidationExceptionMapperTest {
     }
 
     @Test
-    @DisplayName("should map ConstraintViolationException to 400 status with proper response structure")
+    @DisplayName(
+            "should map ConstraintViolationException to 400 status with proper response structure")
     void testValidationExceptionStructure() {
         Set<ConstraintViolation<?>> violations = new HashSet<>();
         ConstraintViolationException exception = new ConstraintViolationException(violations);
@@ -69,5 +69,3 @@ class ValidationExceptionMapperTest {
         }
     }
 }
-
-

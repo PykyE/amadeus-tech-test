@@ -6,44 +6,38 @@ import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.amadeus.*;
-import org.amadeus.grpc.entity.ProductEntity;
-import org.amadeus.grpc.repository.ProductRepository;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import org.amadeus.*;
+import org.amadeus.grpc.entity.*;
+import org.amadeus.grpc.repository.*;
 
 @GrpcService
 @Blocking
 public class ProductGrpcService implements ProductService {
 
-    @Inject
-    ProductRepository repository;
+    @Inject ProductRepository repository;
 
     @Override
     public Uni<ProductResponse> getProduct(ProductId request) {
         ProductEntity entity = repository.findById(request.getId());
         if (entity == null) {
-            return Uni.createFrom().failure(
-                    Status.NOT_FOUND
-                            .withDescription("Product not found with id: " + request.getId())
-                            .asRuntimeException()
-            );
+            return Uni.createFrom()
+                    .failure(
+                            Status.NOT_FOUND
+                                    .withDescription(
+                                            "Product not found with id: " + request.getId())
+                                    .asRuntimeException());
         }
         return Uni.createFrom().item(() -> toResponse(entity));
     }
 
     @Override
     public Uni<ProductListResponse> getAllProducts(EmptyRequest request) {
-        List<ProductResponse> products = repository.listAll().stream()
-                .map(this::toResponse)
-                .toList();
-
-        return Uni.createFrom().item(() ->
-                ProductListResponse.newBuilder()
-                        .addAllProducts(products)
-                        .build()
-        );
+        List<ProductResponse> products =
+                repository.listAll().stream().map(this::toResponse).toList();
+        return Uni.createFrom()
+                .item(() -> ProductListResponse.newBuilder().addAllProducts(products).build());
     }
 
     @Override
@@ -67,11 +61,12 @@ public class ProductGrpcService implements ProductService {
     public Uni<ProductResponse> updateProduct(UpdateProductRequest request) {
         ProductEntity entity = repository.findById(request.getId());
         if (entity == null) {
-            return Uni.createFrom().failure(
-                    Status.NOT_FOUND
-                            .withDescription("Product not found with id: " + request.getId())
-                            .asRuntimeException()
-            );
+            return Uni.createFrom()
+                    .failure(
+                            Status.NOT_FOUND
+                                    .withDescription(
+                                            "Product not found with id: " + request.getId())
+                                    .asRuntimeException());
         }
         entity.name = request.getName();
         entity.price = request.getPrice();
@@ -89,11 +84,12 @@ public class ProductGrpcService implements ProductService {
     public Uni<EmptyResponse> deleteProduct(ProductId request) {
         ProductEntity entity = repository.findById(request.getId());
         if (entity == null) {
-            return Uni.createFrom().failure(
-                    Status.NOT_FOUND
-                            .withDescription("Product not found with id: " + request.getId())
-                            .asRuntimeException()
-            );
+            return Uni.createFrom()
+                    .failure(
+                            Status.NOT_FOUND
+                                    .withDescription(
+                                            "Product not found with id: " + request.getId())
+                                    .asRuntimeException());
         }
         repository.delete(entity);
         return Uni.createFrom().item(EmptyResponse.newBuilder().build());

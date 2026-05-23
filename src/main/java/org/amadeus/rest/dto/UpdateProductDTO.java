@@ -11,6 +11,4 @@ public record UpdateProductDTO(
         @NotBlank(message = "product description is required") String description,
         @NotNull(message = "product quantity is required") @PositiveOrZero(message = "product quantity must be 0 or greater") Integer quantity,
         @NotBlank(message = "product tags are required") String tags,
-        @NotNull(message = "product active status is required") Boolean active
-) {
-}
+        @NotNull(message = "product active status is required") Boolean active) {}
